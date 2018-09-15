@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Lotto Number Generator 6/58</title>
+	<link rel="stylesheet" href="styles/mdi.css">
+	<style>
+		body {
+			font-family: 'Arial';
+			margin: 0px;
+			background: #f9f9f9;
+		}
+		.mdi {
+			margin-left: 8px;
+			border-radius: 100%;
+		}
+		.mdi.mdi-chevron-up {
+			background: green;
+			color: white;
+		}
+		.mdi.mdi-heart {
+			color: red;
+		}
+		.mdi.mdi-chevron-down {
+			background: red;
+			color: white;
+		}
+		table {
+			font-size: 12px;
+		}
+		table tr td {
+			white-space: nowrap;
+		}
+		table tr td:first-child {
+			white-space: nowrap;
+		}
+		table tr.title td {
+			background: #666 !important;
+			color: white !important;
+		}
+		table tr td:nth-child(odd) {
+			background: #efefef;
+		}
+		table tr:focus td {
+			background: yellow !important;
+			color: black !important;
+		}
+	</style>
+</head>
+<body>
+	<button onclick="toggle('6/58')">Lotto 6/58</button>
+	<button onclick="toggle('6/55')">Lotto 6/55</button>
+	<button onclick="toggle('6/49')">Lotto 6/49</button>
+	<button onclick="toggle('6/45')">Lotto 6/45</button>
+	<button onclick="toggle('6/42')">Lotto 6/42</button>
+	<div id="container6_58" style="display:none;">
+		<table>
+			<tr>
+				<td><h1>Ultra Lotto 6/58</h1></td>
+				<td><span id="predict6_58"></span><button onclick="predict('6/58')">Predict</button><button onclick="clearPrediction('6/58')">Clear</button></td>
+			</tr>
+		</table>
+		<table cellspacing="0" cellpadding="8" id="result6_58">
+			<tr class="title">
+				<td>Winning Numbers</td>
+				<td colspan="59">Probability</td>
+			</tr>
+		</table>
+	</div>
+	<div id="container6_55" style="display:none;">
+		<table>
+			<tr>
+				<td><h1>Grand Lotto 6/55</h1></h1></td>
+				<td><span id="predict6_55"></span><button onclick="predict('6/55')">Predict</button><button onclick="clearPrediction('6/55')">Clear</button></td>
+			</tr>
+		</table>
+		<table cellspacing="0" cellpadding="8" id="result6_55">
+			<tr class="title">
+				<td>Winning Numbers</td>
+				<td colspan="56">Probability</td>
+			</tr>
+		</table>
+	</div>
+	<div id="container6_49" style="display:none;">
+		<table>
+			<tr>
+				<td><h1>Super Lotto 6/49</h1></h1></td>
+				<td><span id="predict6_49"></span><button onclick="predict('6/49')">Predict</button><button onclick="clearPrediction('6/49')">Clear</button></td>
+			</tr>
+		</table>
+		<table cellspacing="0" cellpadding="8" id="result6_49">
+			<tr class="title">
+				<td>Winning Numbers</td>
+				<td colspan="50">Probability</td>
+			</tr>
+		</table>
+	</div>
+	<div id="container6_45" style="display:none;">
+		<table>
+			<tr>
+				<td><h1>Mega Lotto 6/45</h1></h1></td>
+				<td><span id="predict6_45"></span><button onclick="predict('6/45')">Predict</button><button onclick="clearPrediction('6/45')">Clear</button></td>
+			</tr>
+		</table>
+		<table cellspacing="0" cellpadding="8" id="result6_45">
+			<tr class="title">
+				<td>Winning Numbers</td>
+				<td colspan="46">Probability</td>
+			</tr>
+		</table>
+	</div>
+	<div id="container6_42" style="display:none;">
+		<table>
+			<tr>
+				<td><h1>National Lotto 6/42</h1></h1></td>
+				<td><span id="predict6_42"></span><button onclick="predict('6/42')">Predict</button><button onclick="clearPrediction('6/42')">Clear</button></td>
+			</tr>
+		</table>
+		<table cellspacing="0" cellpadding="8" id="result6_42">
+			<tr class="title">
+				<td>Winning Numbers</td>
+				<td colspan="43">Probability</td>
+			</tr>
+		</table>
+	</div>
+	<script src="data.js"></script>
+	<script>
+		var generateLotto = (lotto_key) => {
+			const BASE__LOTTO__KEY = lotto_key;
+			const BASE__LOTTO = lotto[BASE__LOTTO__KEY];
+			var append = "";
+			var table = document.getElementById('result'+BASE__LOTTO__KEY.replace('/', '_'));
+
+			append = '<tr class="title"><td></td>';
+			for(var i = 1; i <= BASE__LOTTO.max; i++) {
+				append += `<td>${i}</td>`;
+			}
+			append += '<td>Up & Top 6 Total</td></tr>';
+			table.insertAdjacentHTML('beforeend', append);
+
+			append = '<tr><td></td>';
+			for(var i = 1; i <= BASE__LOTTO.max; i++) {
+				append += '<td>'+(1/BASE__LOTTO.max*100).toFixed(5)+'%</td>';
+			}
+			append += '</tr>';
+			table.insertAdjacentHTML('beforeend', append);
+
+			var resultNo = 1;
+			for(var x = BASE__LOTTO.winning_numbers.length-1; x >= 0; x--) {
+				append = "";
+				var _wn = BASE__LOTTO.winning_numbers[x];
+				var _wn_arr = _wn.split('-');
+				for(var y in _wn_arr) {
+					_wn_arr[y] = parseInt(_wn_arr[y], 10);
+					BASE__LOTTO.numbers[_wn_arr[y]]++;
+				}
+				append += "<tr><td>" + _wn + "</td>";
+				var top6 = [0,0,0,0,0,0];
+				var max = 0;
+				for(var i = 1; i <= BASE__LOTTO.max; i++) {
+					var average = getAverage(BASE__LOTTO__KEY, i).toFixed(5);
+					if(average > max)
+						max = average;
+					BASE__LOTTO.current_probability[i] = average;
+				}
+				for(var i = 1; i <= BASE__LOTTO.max; i++) {
+					var top6key = 0;
+					if(top6[top6key] == 0) {
+						top6[top6key] = i;
+						continue;
+					} else {
+						if(BASE__LOTTO.current_probability[top6[top6key]] < BASE__LOTTO.current_probability[i]) {
+							top6[5] = top6[4];
+							top6[4] = top6[3];
+							top6[3] = top6[2];
+							top6[2] = top6[1];
+							top6[1] = top6[0];
+							top6[0] = i;
+							continue;
+						}
+					}
+					top6key = 1;
+					if(top6[top6key] == 0) {
+						top6[top6key] = i;
+						continue;
+					} else {
+						if(BASE__LOTTO.current_probability[top6[top6key]] < BASE__LOTTO.current_probability[i]) {
+							top6[5] = top6[4];
+							top6[4] = top6[3];
+							top6[3] = top6[2];
+							top6[2] = top6[1];
+							top6[1] = i;
+							continue;
+						}
+					}
+					top6key = 2;
+					if(top6[top6key] == 0) {
+						top6[top6key] = i;
+						continue;
+					} else {
+						if(BASE__LOTTO.current_probability[top6[top6key]] < BASE__LOTTO.current_probability[i]) {
+							top6[5] = top6[4];
+							top6[4] = top6[3];
+							top6[3] = top6[2];
+							top6[2] = i;
+							continue;
+						}
+					}
+					top6key = 3;
+					if(top6[top6key] == 0){
+						top6[top6key] = i;
+						continue;
+					} else {
+						if(BASE__LOTTO.current_probability[top6[top6key]] < BASE__LOTTO.current_probability[i]) {
+							top6[5] = top6[4];
+							top6[4] = top6[3];
+							top6[3] = i;
+							continue;
+						}
+					}
+					top6key = 4;
+					if(top6[top6key] == 0){
+						top6[top6key] = i;
+						continue;
+					} else {
+						if(BASE__LOTTO.current_probability[top6[top6key]] < BASE__LOTTO.current_probability[i]) {
+							top6[5] = top6[4];
+							top6[4] = i;
+							continue;
+						}
+					}
+					top6key = 5;
+					if(top6[top6key] == 0){
+						top6[top6key] = i;
+						continue;
+					} else {
+						if(BASE__LOTTO.current_probability[top6[top6key]] < BASE__LOTTO.current_probability[i]) {
+							top6[5] = i;
+							continue;
+						}
+					}
+				}
+				var upAndTop6Total = 0;
+				for(var i = 1; i <= BASE__LOTTO.max; i++) {
+					var average = getAverage(BASE__LOTTO__KEY, i).toFixed(5);
+					var is_up = '';
+					if(BASE__LOTTO.prev_probability[i] < average) {
+						is_up = '<i class="mdi mdi-chevron-up"></i>';
+					}
+					var upAndTop6 = '';
+					if(is_up != '' && top6.includes(i)) {
+						upAndTop6 = " upAndTop6 ";
+						upAndTop6Total++;
+					}
+					var isTop6 = "";
+					if(top6.includes(i)) {
+						isTop6 = '<i class="mdi mdi-heart"></i>';
+					}
+					append += '<td class="'+upAndTop6+'" style="background: rgba(0,92,185,'+(average/max)+'); color: white;">'+average+'%'+is_up+isTop6+'</td>';
+					BASE__LOTTO.prev_probability[i] = average;
+				}
+				append += "<td>"+upAndTop6Total+"</td></tr>";
+				table.insertAdjacentHTML('beforeend', append);
+				if(resultNo == 15) {
+					resultNo = 0;
+					append = '<tr class="title"><td></td>';
+					for(var i = 1; i <= BASE__LOTTO.max; i++) {
+						append += `<td>${i}</td>`;
+					}
+					append += "<td></td></tr>";
+					table.insertAdjacentHTML('beforeend', append);
+				}
+				resultNo++;
+			}
+		}
+		let predict = function(lotto_key) {
+			const BASE__LOTTO__KEY = lotto_key;
+			const BASE__LOTTO = lotto[BASE__LOTTO__KEY];
+			var numbers = [];
+			var prediction = [];
+			for(let i = 1; i <= BASE__LOTTO.max; i++) {
+				for(let j = 1; j < BASE__LOTTO.numbers[i]; j++) {
+					numbers.push(i);
+				}
+			}
+			for(let i = 0; i < 6; i++) {
+				let idx = Math.floor(Math.random() * numbers.length);
+				var p = numbers[idx];
+				if(prediction.includes(p))
+					i--;
+				else
+					prediction[i] = p;
+			}
+			document.getElementById('predict'+BASE__LOTTO.pick+'_'+BASE__LOTTO.max).insertAdjacentHTML('beforeend', prediction.join('-')+"<br>");
+		}
+		let clearPrediction = function(lotto_key) {
+			const BASE__LOTTO__KEY = lotto_key;
+			const BASE__LOTTO = lotto[BASE__LOTTO__KEY];
+			document.getElementById('predict'+BASE__LOTTO.pick+'_'+BASE__LOTTO.max).innerHTML = "";
+		}
+		let toggle = function(lotto_key) {
+			document.getElementById('container6_58').style.display = "none";
+			document.getElementById('container6_55').style.display = "none";
+			document.getElementById('container6_49').style.display = "none";
+			document.getElementById('container6_45').style.display = "none";
+			document.getElementById('container6_42').style.display = "none";
+			const BASE__LOTTO__KEY = lotto_key;
+			const BASE__LOTTO = lotto[BASE__LOTTO__KEY];
+			let container = document.getElementById('container'+BASE__LOTTO.pick+'_'+BASE__LOTTO.max);
+			if(container.style.display === "none") {
+				generateLotto(lotto_key);
+				container.style.display = "block";
+			} else {
+				container.style.display = "none";
+			}
+		}
+		
+	</script>
+</body>
+</html>
