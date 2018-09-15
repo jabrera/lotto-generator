@@ -54,6 +54,9 @@
 	<button onclick="toggle('6/49')">Lotto 6/49</button>
 	<button onclick="toggle('6/45')">Lotto 6/45</button>
 	<button onclick="toggle('6/42')">Lotto 6/42</button>
+	<br><br>
+	<i class="mdi mdi-chevron-up"></i> A winning number
+	<i class="mdi mdi-heart"></i> Top 6 Highest Probability
 	<div id="container6_58" style="display:none;">
 		<table>
 			<tr>
@@ -141,7 +144,7 @@
 
 			append = '<tr><td></td>';
 			for(var i = 1; i <= BASE__LOTTO.max; i++) {
-				append += '<td>'+(1/BASE__LOTTO.max*100).toFixed(5)+'%</td>';
+				append += '<td>'+(1/BASE__LOTTO.max*100).toFixed(DECIMAL)+'%</td>';
 			}
 			append += '</tr>';
 			table.insertAdjacentHTML('beforeend', append);
@@ -159,7 +162,7 @@
 				var top6 = [0,0,0,0,0,0];
 				var max = 0;
 				for(var i = 1; i <= BASE__LOTTO.max; i++) {
-					var average = getAverage(BASE__LOTTO__KEY, i).toFixed(5);
+					var average = getAverage(BASE__LOTTO__KEY, i).toFixed(DECIMAL);
 					if(average > max)
 						max = average;
 					BASE__LOTTO.current_probability[i] = average;
@@ -243,7 +246,7 @@
 				}
 				var upAndTop6Total = 0;
 				for(var i = 1; i <= BASE__LOTTO.max; i++) {
-					var average = getAverage(BASE__LOTTO__KEY, i).toFixed(5);
+					var average = getAverage(BASE__LOTTO__KEY, i).toFixed(DECIMAL);
 					var is_up = '';
 					if(BASE__LOTTO.prev_probability[i] < average) {
 						is_up = '<i class="mdi mdi-chevron-up"></i>';
@@ -274,19 +277,30 @@
 				resultNo++;
 			}
 		}
-		let predict = function(lotto_key) {
+		var predict = function(lotto_key) {
 			const BASE__LOTTO__KEY = lotto_key;
 			const BASE__LOTTO = lotto[BASE__LOTTO__KEY];
 			var numbers = [];
-			var prediction = [];
-			for(let i = 1; i <= BASE__LOTTO.max; i++) {
-				for(let j = 1; j < BASE__LOTTO.numbers[i]; j++) {
+			for(var i = 1; i <= BASE__LOTTO.max; i++) {
+				for(var j = 1; j < BASE__LOTTO.numbers[i]; j++) {
 					numbers.push(i);
 				}
 			}
-			for(let i = 0; i < 6; i++) {
-				let idx = Math.floor(Math.random() * numbers.length);
-				var p = numbers[idx];
+			var prediction = [];
+			for(var i = 0; i < BASE__LOTTO.pick; i++) {
+				var initial_prediction = {};
+				var p = 0;
+				while(true) {
+					var idx = Math.floor(Math.random() * numbers.length);
+					if(initial_prediction.hasOwnProperty(numbers[idx])) {
+						initial_prediction[numbers[idx]]++;
+						if(initial_prediction[numbers[idx]] == TRIES) {
+							p = numbers[idx];
+							break;
+						}
+					} else
+						initial_prediction[numbers[idx]] = 1;
+				}
 				if(prediction.includes(p))
 					i--;
 				else
@@ -294,12 +308,12 @@
 			}
 			document.getElementById('predict'+BASE__LOTTO.pick+'_'+BASE__LOTTO.max).insertAdjacentHTML('beforeend', prediction.join('-')+"<br>");
 		}
-		let clearPrediction = function(lotto_key) {
+		var clearPrediction = function(lotto_key) {
 			const BASE__LOTTO__KEY = lotto_key;
 			const BASE__LOTTO = lotto[BASE__LOTTO__KEY];
 			document.getElementById('predict'+BASE__LOTTO.pick+'_'+BASE__LOTTO.max).innerHTML = "";
 		}
-		let toggle = function(lotto_key) {
+		var toggle = function(lotto_key) {
 			document.getElementById('container6_58').style.display = "none";
 			document.getElementById('container6_55').style.display = "none";
 			document.getElementById('container6_49').style.display = "none";
@@ -307,7 +321,7 @@
 			document.getElementById('container6_42').style.display = "none";
 			const BASE__LOTTO__KEY = lotto_key;
 			const BASE__LOTTO = lotto[BASE__LOTTO__KEY];
-			let container = document.getElementById('container'+BASE__LOTTO.pick+'_'+BASE__LOTTO.max);
+			var container = document.getElementById('container'+BASE__LOTTO.pick+'_'+BASE__LOTTO.max);
 			if(container.style.display === "none") {
 				generateLotto(lotto_key);
 				container.style.display = "block";

@@ -1,3 +1,6 @@
+var DECIMAL = 5;
+var TRIES = 100;
+
 var lotto = {
 
 	"6/58": {
@@ -8,10 +11,10 @@ var lotto = {
 				this.numbers[i] = 1;
 			}
 			for(let i = 1; i <= this.max; i++) {
-				this.prev_probability[i] = (1/this.max*100).toFixed(5);
+				this.prev_probability[i] = (1/this.max*100).toFixed(DECIMAL);
 			}
 			for(let i = 1; i <= this.max; i++) {
-				this.current_probability[i] = (1/this.max*100).toFixed(5);
+				this.current_probability[i] = (1/this.max*100).toFixed(DECIMAL);
 			}
 		},
 		"winning_numbers": [
@@ -475,10 +478,10 @@ var lotto = {
 				this.numbers[i] = 1;
 			}
 			for(let i = 1; i <= this.max; i++) {
-				this.prev_probability[i] = (1/this.max*100).toFixed(5);
+				this.prev_probability[i] = (1/this.max*100).toFixed(DECIMAL);
 			}
 			for(let i = 1; i <= this.max; i++) {
-				this.current_probability[i] = (1/this.max*100).toFixed(5);
+				this.current_probability[i] = (1/this.max*100).toFixed(DECIMAL);
 			}
 		},
 		"winning_numbers": [
@@ -1796,10 +1799,10 @@ var lotto = {
 				this.numbers[i] = 1;
 			}
 			for(let i = 1; i <= this.max; i++) {
-				this.prev_probability[i] = (1/this.max*100).toFixed(5);
+				this.prev_probability[i] = (1/this.max*100).toFixed(DECIMAL);
 			}
 			for(let i = 1; i <= this.max; i++) {
-				this.current_probability[i] = (1/this.max*100).toFixed(5);
+				this.current_probability[i] = (1/this.max*100).toFixed(DECIMAL);
 			}
 		},
 		"winning_numbers": [
@@ -3404,10 +3407,10 @@ var lotto = {
 				this.numbers[i] = 1;
 			}
 			for(let i = 1; i <= this.max; i++) {
-				this.prev_probability[i] = (1/this.max*100).toFixed(5);
+				this.prev_probability[i] = (1/this.max*100).toFixed(DECIMAL);
 			}
 			for(let i = 1; i <= this.max; i++) {
-				this.current_probability[i] = (1/this.max*100).toFixed(5);
+				this.current_probability[i] = (1/this.max*100).toFixed(DECIMAL);
 			}
 		},
 		"winning_numbers": [
@@ -5081,10 +5084,10 @@ var lotto = {
 				this.numbers[i] = 1;
 			}
 			for(let i = 1; i <= this.max; i++) {
-				this.prev_probability[i] = (1/this.max*100).toFixed(5);
+				this.prev_probability[i] = (1/this.max*100).toFixed(DECIMAL);
 			}
 			for(let i = 1; i <= this.max; i++) {
-				this.current_probability[i] = (1/this.max*100).toFixed(5);
+				this.current_probability[i] = (1/this.max*100).toFixed(DECIMAL);
 			}
 		},
 		"winning_numbers": [
